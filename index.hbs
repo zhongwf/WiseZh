@@ -1,0 +1,334 @@
+{{!< default}}
+
+
+
+<div class="row main-content">
+		<div class="offset1 span6 zone-content">
+			
+{{#foreach posts}}
+
+
+ 
+						
+<article class="{{post_class}}">
+     <footer class="post-meta" style="font-size: 15px;
+    color: #b3b3b3;">
+        
+        <time class="post-date" datetime="{{date format='YYYY-MM-DD'}}">{{date format="YYYY-MM-DD"}}</time>
+    </footer> 
+        <h2 class="post-title" style="font-size: 28px;"><a href="{{url}}">{{{title}}}</a></h2>
+   
+        <p style="font-size: 18px;
+    line-height: 1.4;padding-bottom:25px;">{{excerpt words="26"}} <a class="read-more" href="{{url}}">&raquo;</a></p>
+   
+
+</article>
+		<div class="clearfix"></div>				 
+					
+					
+
+					
+{{/foreach}} 
+
+{{! Previous/next page links - displayed on every page }}
+{{pagination}}
+			
+			<div class="clearfix"></div>
+
+			
+
+			 
+		</div>
+
+		<aside id="aside-right" class="aside-column offset1 span3">
+			<article class="widget-search-form widget"> 
+				<form action="#" class="search-form" method="get">    
+					<fieldset>
+				        <input id="searchBox" name="q" type="text" value="">
+				        <button type="submit" id="searchButton" >Go</button>
+				    </fieldset>
+				</form>
+			</article>
+
+			<article class="widget-tag-cloud widget">
+ 				<ul class="tagcloud" id="myTagcloud">
+<!--			    
+			    <li class="tagCloud-tag tagCloud-3">
+			        <a href="#">Krakow</a>
+			    </li>
+-->
+				</ul>
+			</article>
+			<!--
+			<article class="widget-blogcategories widget">
+				<header>
+		    		<h1>分类</h1>
+				</header>
+			    <ul>
+			    	<li><a href="#">Java/Node.js</a></li>
+			    	<li><a href="#">智能硬件</a></li>
+			    	<li><a href="#">移动互联网</a></li>
+			    	<li><a href="#">其他</a></li>
+			    </ul>
+			</article>
+			-->
+		 
+			
+			<article class="widget-html-widget widget">
+					<p style="text-align:center">{{@blog.description}}</p>
+				
+					<p style="text-align:center">
+						
+						<a href="https://github.com/zhongwf"><i class="smicon-github"></i></a>
+						<a href="/assets/source/em.png"><i class="smicon-mail"></i></a>
+						<a href="/rss"><i class="smicon-rss"></i></a>
+				    </p>
+			</article>
+		</aside>
+	</div>
+ 
+
+					<div id="researchResultTemplate" style="display:none;visibility:hidden">
+<div class="item"><a href="urlurlurl"><img class="logo" src="imgimgimg" alt="titletitletitle"></a>
+<p class="title">titletitletitle</p>
+</div>
+</div>
+					
+            <!-- show more -->
+            <div class="showmoreX text-center" id="showmorearticlesX">{{pagination}}</div>
+            <!-- /show more -->
+        </div>
+		
+<script>
+function searchEngine(){
+
+ 
+
+$(".tag-i").click(function ( ) {
+  console.log( "changeing tag " );
+  searchEngine();
+}); 
+
+
+
+    var iniQuery = "query=";
+    var query = ""; 
+	var realquery = iniQuery;
+	var alltag = $("#tagBox").tagging( "getTags" );
+	var type = "";
+	$.each(alltag, function(i,val){
+        var keyword = val.substring(val.indexOf(":") + 1);
+		if(val.indexOf("标签") == 0){
+			 type="all_tags";
+		}else {
+			 type="default";
+		}
+        if(query == ""){
+			query += type + ":\"" + keyword + "\"";
+		}else{
+			query += " AND " + type + ":\"" + keyword + "\"";
+		}
+		
+		
+	});	
+	
+	/*
+	if(query != ""){
+		realquery += ( query + " OR " + query.replace(/default/g,'all_tags'));
+	}
+	*/
+	realquery = iniQuery + query;
+	//realquery = "query=default:\"洪秀柱\" AND default:\"烟花\" OR all_tags:\"洪秀柱\" AND all_tags:\"烟花\"  ";
+	console.log("query " + realquery);
+	console.log("query " + encodeURIComponent(realquery)); 
+	if(realquery != iniQuery){
+		$("#clearAllTag").show();
+		$.get(ghost.url.api('opensearch?Q=' + encodeURIComponent(realquery) + "&t=" + new Date(), "")).done(function (data){
+		$("#ajaxlogolist").html(null);
+			$("#showmorearticlesX").html(null);
+			
+		if(data != null && data.length != null && data.length > 0){
+			console.log(data[0].title);
+			
+			$.each(data, function(i,val){ 
+			    var result = $("#researchResultTemplate").html();
+				result = result.replace(/titletitletitle/g,val.title).replace(/imgimgimg/g,val.image).replace(/urlurlurl/g,val.slug);
+				$("#ajaxlogolist").html($("#ajaxlogolist").html() + result);
+			});	
+			
+		}else{
+			$("#showmorearticlesX").html("搜索没有结果，请您调整搜索条件！");
+		}
+		}).fail(function (err){
+			console.log(err);
+		});
+	}else{
+		$("#clearAllTag").hide();
+		$.get(ghost.url.api('posts', "")).done(function (data){
+			console.log("nokeyword " + data);
+		if(data.posts != null && data.posts.length != null && data.posts.length > 0){
+			console.log(data.posts[0].title);
+			$("#ajaxlogolist").html(null);
+			$("#showmorearticlesX").html(null);
+			$.each(data.posts, function(i,val){ 
+			    var result = $("#researchResultTemplate").html();
+				result = result.replace(/titletitletitle/g,val.title).replace(/imgimgimg/g,val.image).replace(/urlurlurl/g,val.slug);
+				$("#ajaxlogolist").html($("#ajaxlogolist").html() + result);
+			});	
+			
+		}
+		});
+	}
+
+ 
+
+}
+
+</script>
+<script>
+var color_prefix = '色彩：';
+var my_custom_options = {
+    "no-duplicate": false,
+    "no-enter": true
+};
+
+$(document).ready(function(){
+
+
+$("#clearAllTag").click(function (){
+	$("#tagBox").tagging("removeAll" );
+	$("#clearAllTag").hide();
+	searchEngine();
+});
+
+
+	$("input#swatchesonly").ColorPickerSliders({
+		placement: 'bottom',
+		color: 'white',
+		onchange: function(container, color) { 
+			var alltag = $("#tagBox").tagging( "getTags" );
+		$.each(alltag, function(i,val){      
+      if(val.indexOf(color_prefix) == 0 ){ 
+		$("#tagBox").tagging("remove",val);
+	  }
+
+       });	
+	
+	
+	$("#tagBox").tagging("add",color_prefix + color.tiny.toHex());
+		searchEngine();
+            },
+    swatches: [
+'#FFFFFF',
+'#C9F5FF',
+'#CBDEFF',
+'#BFB6FF',
+'#D7B6FF',
+'#EFBFDD',
+'#FFCFC1',
+'#FFE8C5',
+'#FFF6D4',
+'#E2EFC3',
+'#DBDBDB',
+'#67E2FF',
+'#69A1FF',
+'#6A55FF',
+'#A155FF',
+'#E16CB3',
+'#FF835F',
+'#FFC265',
+'#FFE371',
+'#C0E073',
+'#9B9B9B',
+'#0DD1FF',
+'#0F67FF',
+'#1E00FB',
+'#7000FB',
+'#DD1690',
+'#FF3D05',
+'#FF9E0A',
+'#FFD118',
+'#A4DC1C',
+'#4D4D4D',
+'#0091B2',
+'#0042B4',
+'#1300A1',
+'#4800A1',
+'#9C0060',
+'#AC0000',
+'#AF6900',
+'#BB9600',
+'#729F00',
+'#161616',
+'#00586D',
+'#00296E',
+'#0A005D',
+'#2A005D',
+'#560035',
+'#661600',
+'#693F00',
+'#765E00',
+'#405A00'	
+	],
+    customswatches: false,
+    order: {}
+  });
+  
+
+
+$("#searchButton").click(function(){
+console.log("searchButton click");
+var content = $("#searchBox").val();
+if(content != null && content != ''){
+	$("#tagBox").tagging("add","关键字:" + $("#searchBox").val());
+	searchEngine();
+}
+
+}
+);
+
+
+$(".blogType").click(function(){
+$("#tagBox").tagging("add","类别:" + $(this).html());
+searchEngine();
+}
+);
+
+
+$("#tagBox").tagging(my_custom_options );
+
+
+
+ 
+	
+	 
+	
+$.get(ghost.url.api('tags')).done(function (data){
+
+$.each(data.tags, function(i,val){      
+      $("#gzhlist").html(' <button class="btn blog-tags btn-primary" type="button"   style="margin: 2px;">' + val.name +'</button> ' + $("#gzhlist").html());
+	  
+	  $("#myTagcloud").append('<li class="tagCloud-tag tagCloud-2"><a href="/tag/' + val.slug + '/">' + val.name + '</a></li>');
+
+  });
+  
+$(".blog-tags").click(function(){
+$("#tagBox").tagging("add","标签:" + $(this).html());
+
+
+  
+			    
+			    
+
+
+searchEngine();
+}
+);
+  
+  console.log('tags', data.tags);
+}).fail(function (err){
+  console.log(err);
+});
+
+});
+</script>
