@@ -1,6 +1,8 @@
  //Enabling drop down navigation for mobile screen sizes
 
- 
+ $(function () {
+     $("#nav").tinyNav({ header: '-- 导航菜单 --' });
+  });
 
 //Adjusting the sub-menu positions so they are centered
 document.onreadystatechange = function() {
