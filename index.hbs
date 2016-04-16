@@ -4,7 +4,8 @@
 
 <div class="row main-content">
 		<div class="offset1 span6 zone-content">
-			
+
+<div id="ajaxarticlelist">		
 {{#foreach posts}}
 
 
@@ -29,9 +30,12 @@
 
 					
 {{/foreach}} 
+</div>
 
 {{! Previous/next page links - displayed on every page }}
+<div id="showmorearticlesX">
 {{pagination}}
+</div>
 			
 			<div class="clearfix"></div>
 
@@ -45,7 +49,7 @@
 				<form action="#" class="search-form" method="get">    
 					<fieldset>
 				        <input id="searchBox" name="q" type="text" value="">
-				        <button type="submit" id="searchButton" >Go</button>
+				        <button type="button" id="searchButton" >Go</button>
 				    </fieldset>
 				</form>
 			</article>
@@ -88,11 +92,26 @@
 	</div>
  
 
-					<div id="researchResultTemplate" style="display:none;visibility:hidden">
-<div class="item"><a href="urlurlurl"><img class="logo" src="imgimgimg" alt="titletitletitle"></a>
-<p class="title">titletitletitle</p>
+<div id="researchResultTemplate" style="display:none;visibility:hidden">
+
+<article class="{{post_class}}">
+     <footer class="post-meta" style="font-size: 15px;
+    color: #b3b3b3;">
+        
+        
+    </footer> 
+        <h2 class="post-title" style="font-size: 28px;"><a href="urlurlurl">titletitletitle</a></h2>
+   
+   
+
+</article>
+<div class="clearfix"></div>
+		
+
 </div>
-</div>
+
+
+		 
 					
             <!-- show more -->
             <div class="showmoreX text-center" id="showmorearticlesX">{{pagination}}</div>
@@ -131,7 +150,7 @@ $(".tag-i").click(function ( ) {
 		
 		
 	});	
-	
+	var skey = $("#searchBox").val();
 	/*
 	if(query != ""){
 		realquery += ( query + " OR " + query.replace(/default/g,'all_tags'));
@@ -139,12 +158,16 @@ $(".tag-i").click(function ( ) {
 	*/
 	realquery = iniQuery + query;
 	//realquery = "query=default:\"洪秀柱\" AND default:\"烟花\" OR all_tags:\"洪秀柱\" AND all_tags:\"烟花\"  ";
+	
+	var skey = $("#searchBox").val();
+	
+	realquery = "query=default:\"" + skey +"\"   OR all_tags:\"" + skey +"\"   ";
 	console.log("query " + realquery);
 	console.log("query " + encodeURIComponent(realquery)); 
 	if(realquery != iniQuery){
 		$("#clearAllTag").show();
 		$.get(ghost.url.api('opensearch?Q=' + encodeURIComponent(realquery) + "&t=" + new Date(), "")).done(function (data){
-		$("#ajaxlogolist").html(null);
+		$("#ajaxarticlelist").html(null);
 			$("#showmorearticlesX").html(null);
 			
 		if(data != null && data.length != null && data.length > 0){
@@ -153,7 +176,7 @@ $(".tag-i").click(function ( ) {
 			$.each(data, function(i,val){ 
 			    var result = $("#researchResultTemplate").html();
 				result = result.replace(/titletitletitle/g,val.title).replace(/imgimgimg/g,val.image).replace(/urlurlurl/g,val.slug);
-				$("#ajaxlogolist").html($("#ajaxlogolist").html() + result);
+				$("#ajaxarticlelist").html($("#ajaxarticlelist").html() + result);
 			});	
 			
 		}else{
@@ -168,12 +191,12 @@ $(".tag-i").click(function ( ) {
 			console.log("nokeyword " + data);
 		if(data.posts != null && data.posts.length != null && data.posts.length > 0){
 			console.log(data.posts[0].title);
-			$("#ajaxlogolist").html(null);
+			$("#ajaxarticlelist").html(null);
 			$("#showmorearticlesX").html(null);
 			$.each(data.posts, function(i,val){ 
 			    var result = $("#researchResultTemplate").html();
 				result = result.replace(/titletitletitle/g,val.title).replace(/imgimgimg/g,val.image).replace(/urlurlurl/g,val.slug);
-				$("#ajaxlogolist").html($("#ajaxlogolist").html() + result);
+				$("#ajaxarticlelist").html($("#ajaxarticlelist").html() + result);
 			});	
 			
 		}
