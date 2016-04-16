@@ -40,6 +40,8 @@ td,th {
 	padding: .3rem 1rem
 }
 
+
+
 tbody>tr:nth-child(odd) {
 	background-color: #f2f2f2;
 	border-top: 1px solid #b3b3b3;
@@ -871,4 +873,9 @@ aside.aside-column article.widget header h1 {
 /* Bootstrap Carousel Fix */
 .carousel-control {
   text-decoration: none;
+}
+
+
+.noAlink a {
+	color:#b3b3b3;
 }
