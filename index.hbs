@@ -320,7 +320,7 @@ $("#tagBox").tagging(my_custom_options );
 	
 	 
 	
-$.get(ghost.url.api('tags')).done(function (data){
+$.get(ghost.url.api('tags',{limit: "all"})).done(function (data){
 
 $.each(data.tags, function(i,val){      
       $("#gzhlist").html(' <button class="btn blog-tags btn-primary" type="button"   style="margin: 2px;">' + val.name +'</button> ' + $("#gzhlist").html());
